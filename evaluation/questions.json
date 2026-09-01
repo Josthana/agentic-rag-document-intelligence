@@ -1,0 +1,50 @@
+[
+  {
+    "id": "remote_work_01",
+    "question": "What are the requirements for remote work eligibility?",
+    "expected_sources": [
+      "remote_work_policy.pdf",
+      "employee_handbook.pdf"
+    ],
+    "expected_keywords": [
+      "role",
+      "performance",
+      "security",
+      "approval"
+    ]
+  },
+  {
+    "id": "remote_work_02",
+    "question": "Can employees work from another state or country?",
+    "expected_sources": [
+      "remote_work_policy.pdf"
+    ],
+    "expected_keywords": []
+  },
+  {
+    "id": "expense_01",
+    "question": "What does the company policy say about reimbursement of business expenses?",
+    "expected_sources": [
+      "expense_policy.pdf"
+    ],
+    "expected_keywords": []
+  },
+  {
+    "id": "leave_01",
+    "question": "What does the policy say about requesting employee leave?",
+    "expected_sources": [
+      "leave_policy.pdf",
+      "personal-leave-policy.pdf",
+      "employee_handbook.pdf"
+    ],
+    "expected_keywords": []
+  },
+  {
+    "id": "travel_01",
+    "question": "What are the main requirements employees should follow for business travel?",
+    "expected_sources": [
+      "travel_policy.pdf"
+    ],
+    "expected_keywords": []
+  }
+]
