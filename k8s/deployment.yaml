@@ -1,0 +1,158 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: agentic-rag-api
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: agentic-rag-api
+
+  template:
+    metadata:
+      labels:
+        app: agentic-rag-api
+
+    spec:
+      containers:
+        - name: agentic-rag-api
+
+          image: agentic-rag-document-intelligence:v2
+
+          # We already built this image locally in Docker Desktop.
+          imagePullPolicy: Never
+
+          ports:
+            - containerPort: 8000
+
+          env:
+            # -----------------------------------------
+            # SentenceTransformer
+            # -----------------------------------------
+
+            - name: LOCAL_EMBEDDING_MODEL
+              value: "all-MiniLM-L6-v2"
+
+            - name: EMBEDDING_DIMENSION
+              value: "384"
+
+            # -----------------------------------------
+            # Chroma
+            # -----------------------------------------
+
+            - name: CHROMA_DIR
+              value: "/app/state/chroma"
+
+            - name: CHROMA_COLLECTION
+              value: "documents"
+
+            - name: VECTOR_TOP_K
+              value: "5"
+
+            # -----------------------------------------
+            # BM25
+            # -----------------------------------------
+
+            - name: BM25_TOP_K
+              value: "5"
+
+            - name: BM25_INDEX_FILE
+              value: "/app/state/bm25_index.json"
+
+            # -----------------------------------------
+            # Hybrid retrieval
+            # -----------------------------------------
+
+            - name: FINAL_TOP_K
+              value: "5"
+
+            - name: VECTOR_WEIGHT
+              value: "0.6"
+
+            - name: BM25_WEIGHT
+              value: "0.4"
+
+            # -----------------------------------------
+            # Ollama
+            #
+            # Ollama runs on your Mac host.
+            # -----------------------------------------
+
+            - name: OLLAMA_BASE_URL
+              value: "http://host.docker.internal:11434"
+
+            - name: OLLAMA_MODEL
+              value: "llama3.2:3b"
+
+            - name: OLLAMA_TIMEOUT
+              value: "120"
+
+          # -----------------------------------------
+          # Persistent runtime location
+          # -----------------------------------------
+
+          volumeMounts:
+            - name: rag-state
+              mountPath: /app/state
+
+          # -----------------------------------------
+          # Startup probe
+          #
+          # Give SentenceTransformer enough time
+          # to initialize.
+          # -----------------------------------------
+
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8000
+
+            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 60
+
+          # -----------------------------------------
+          # Readiness probe
+          # -----------------------------------------
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+
+          # -----------------------------------------
+          # Liveness probe
+          # -----------------------------------------
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+
+          # -----------------------------------------
+          # Resources
+          # -----------------------------------------
+
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+
+            limits:
+              cpu: "2"
+              memory: "3Gi"
+
+      volumes:
+        - name: rag-state
+          emptyDir: {}

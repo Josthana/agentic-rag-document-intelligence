@@ -1,88 +1,70 @@
 from dataclasses import dataclass, field
 from typing import Any
 
-from langchain_google_genai import (
-    ChatGoogleGenerativeAI,
-    GoogleGenerativeAIEmbeddings,
-)
-
-from app.config import (
-    CHAT_MODEL,
-    GEMINI_EMBEDDING_MODEL,
-)
-
 
 # =========================================================
-# DATA MODELS
+# DOCUMENT CHUNK
 # =========================================================
 
 @dataclass
 class DocumentChunk:
     """
-    A chunk of text created from an ingested document.
+    A chunk of text created during document ingestion.
+
+    This is the format stored by:
+    - Chroma vector retrieval
+    - BM25 keyword retrieval
     """
 
     chunk_id: str
+
     text: str
+
     metadata: dict[str, Any] = field(
         default_factory=dict
     )
 
+
+# =========================================================
+# RETRIEVED CHUNK
+# =========================================================
 
 @dataclass
 class RetrievedChunk:
     """
-    A chunk returned by a retrieval system.
+    A document chunk returned by a retrieval system.
     """
 
     chunk_id: str
+
     text: str
+
     metadata: dict[str, Any] = field(
         default_factory=dict
     )
+
     score: float = 0.0
+
     source: str = ""
+
+
+# =========================================================
+# RAG RESULT
+# =========================================================
 
 @dataclass
 class RAGResult:
     """
-    Final result returned by the RAG pipeline.
+    Final output produced by the RAG or
+    Agentic RAG pipeline.
     """
 
     query: str
+
     answer: str
+
     sources: list[RetrievedChunk] = field(
         default_factory=list
     )
+
     used_query: str | None = None
-# =========================================================
-# GEMINI LLM
-# =========================================================
-
-llm = ChatGoogleGenerativeAI(
-    model=CHAT_MODEL,
-    temperature=0,
-)
-
-
-# =========================================================
-# LEGACY GEMINI EMBEDDINGS
-# =========================================================
-#
-# Keep these temporarily because some older project files
-# may still import them.
-#
-# The new Chroma vector store does NOT use these.
-# It uses SentenceTransformer instead.
-#
-
-document_embeddings = GoogleGenerativeAIEmbeddings(
-    model=GEMINI_EMBEDDING_MODEL,
-    task_type="RETRIEVAL_DOCUMENT",
-)
-
-
-query_embeddings = GoogleGenerativeAIEmbeddings(
-    model=GEMINI_EMBEDDING_MODEL,
-    task_type="RETRIEVAL_QUERY",
-)
