@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Agentic RAG Document Intelligence System
 
 An end-to-end **Agentic Retrieval-Augmented Generation (RAG)** system for answering questions from PDF documents using hybrid retrieval, local embeddings, a local LLM, LangGraph, FastAPI, Docker, and Kubernetes.
@@ -1080,3 +1081,7 @@ This project demonstrates practical experience with:
 ## Project Status
 
 **Complete — end-to-end Agentic RAG system successfully tested locally, in Docker, and on Kubernetes.**
+=======
+# Agentic-rag-document-intelligence
+Production-oriented Agentic RAG system using LangGraph, LangChain, Pinecone, Hybrid Search, FastAPI and RAGAS.
+>>>>>>> e8e20322c2182192cd8bc3cfaa6e3f0d1a60ad97
