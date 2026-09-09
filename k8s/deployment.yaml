@@ -20,9 +20,7 @@ spec:
       containers:
         - name: agentic-rag-api
 
-          image: agentic-rag-document-intelligence:v2
-
-          # We already built this image locally in Docker Desktop.
+          image: agentic-rag-document-intelligence:v1
           imagePullPolicy: Never
 
           ports:
